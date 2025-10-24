@@ -1,1 +1,302 @@
-content , kethan loves nishitha , 
+
+import csv
+num_attributes = 6
+a = []
+print("\n The Given Training Data Set \n")
+csvfile = open('enjoysport.csv', 'r')
+reader = csv.reader(csvfile)
+for row in reader:
+ a.append (row)
+print(row)
+print("\n The initial value of hypothesis: ")
+hypothesis = ['0'] * num_attributes
+print(hypothesis)
+for j in range(0,num_attributes):
+ hypothesis[j] = a[0][j];
+print("\n Fin
+d S: Finding a Maximally Specific Hypothesis\n")
+for i in range(0,len(a)):
+ if a[i][num_attributes]=='Yes':
+  for j in range(0,num_attributes):
+   if a[i][j]!=hypothesis[j]:
+    hypothesis[j]='?'
+   else :
+    hypothesis[j]= a[i][j] 
+print("  For  Training  instance No:{0}  the  hypothesis  is ".format(i),hypothesis)
+print("\n The Maximally Specific Hypothesis for a given Training Examples :\n")
+print(hypothesis)
+
+
+
+Sunny	Warm	Normal	Strong	Warm	Same	Yes
+Sunny	Warm	High	Strong	Warm	Same	Yes
+Rainy	Cold	High	Strong	Warm	Change	No
+Sunny	Warm	High	Strong	Cool	Change	Yes
+
+
+
+
+
+
+
+import csv
+num_attributes = 6
+a = []
+print("\n The Given Training Data Set \n")
+csvfile = open('enjoy.csv', 'r')
+reader = csv.reader(csvfile)
+for row in reader:
+ a.append (row)
+print(row)
+print("\n The initial value of hypothesis: ")
+hypothesis = ['0'] * num_attributes
+print(hypothesis)
+for j in range(0,num_attributes):
+ hypothesis[j] = a[0][j];
+print("\n Find S: Finding a Maximally Specific Hypothesis\n")
+for i in range(0,len(a)):
+ if a[i][num_attributes]=='Yes':
+  for j in range(0,num_attributes):
+   if a[i][j]!=hypothesis[j]:
+    hypothesis[j]='?'
+   else :
+    hypothesis[j]= a[i][j]
+print("  For  Training  instance No:{0}  the  hypothesis  is ".format(i),hypothesis)
+print("\n The Maximally Specific Hypothesis for a given Training Examples :\n")
+print(hypothesis)
+
+
+
+
+
+big, red, triangle, negative
+small, red, triangle, negative
+small, red, circle, positive
+big, blue, circle, negative
+small, blue, circle, positive
+
+
+
+
+import csv
+
+# Define number of attributes (excluding class label)
+num_attributes = 3  
+data = [
+    ["big", "red", "triangle", "negative"],
+    ["small", "red", "triangle", "negative"],
+    ["small", "red", "circle", "positive"],
+    ["big", "blue", "circle", "negative"],
+    ["small", "blue", "circle", "positive"]
+]
+
+# Initialize hypothesis with the first positive example
+hypothesis = None
+for row in data:
+    if row[num_attributes] == "positive":
+        hypothesis = row[:num_attributes]  # Copy the first positive example
+        break
+
+# Apply Find-S Algorithm
+for row in data:
+    if row[num_attributes] == "positive":
+        for j in range(num_attributes):
+            if row[j] != hypothesis[j]:
+                hypothesis[j] = "?"  # Generalize if attributes differ
+
+# Output the final hypothesis
+print("\nMaximally Specific Hypothesis:", hypothesis)
+
+
+
+
+
+
+
+import csv
+a = []
+print("\n The Given Training Data Set \n")
+
+with open('enjoysport.csv', 'r') as csvFile:
+    reader = csv.reader(csvFile)
+    for row in reader:
+        a.append (row)
+        print(row)
+num_attributes = len(a[0])-1
+
+print("\n The initial value of hypothesis: ")
+S = ['0'] * num_attributes
+G = ['?'] * num_attributes
+print ("\n The most specific hypothesis S0 : [0,0,0,0,0,0]\n")
+print (" \n The most general hypothesis G0 : [?,?,?,?,?,?]\n")
+
+# Comparing with First Training Example 
+for j in range(0,num_attributes):
+       S[j] = a[0][j];
+
+# Comparing with Remaining Training Examples of Given Data Set
+
+print("\n Candidate Elimination algorithm  Hypotheses Version Space Computation\n")
+temp=[]
+
+for i in range(0,len(a)):
+    if a[i][num_attributes]=='Yes':
+        for j in range(0,num_attributes):
+            if a[i][j]!=S[j]:
+                S[j]='?'
+                           
+        for j in range(0,num_attributes):
+            for k  in range(1,len(temp)):
+                if temp[k][j]!= '?' and temp[k][j] !=S[j]:
+                    del temp[k]
+        
+        print(" For Training Example No :{0} the hypothesis is S{0}  ".format(i+1),S)
+        if (len(temp)==0):
+            print(" For Training Example No :{0} the hypothesis is G{0} ".format(i+1),G)
+        else:    
+            print(" For Training Example No :{0} the hypothesis is G{0}".format(i+1),temp)
+    
+    if a[i][num_attributes]=='No':
+        for j in range(0,num_attributes):
+            # print("S[j]  ",S[j])
+            # print("a[i][j]  ",a[i][j])
+             if S[j] != a[i][j] and S[j]!= '?':
+                 G[j]=S[j]
+                 temp.append(G)
+                 print("Temp  ",temp)
+                 G = ['?'] * num_attributes
+
+
+import numpy as np
+import math
+import csv
+
+def read_data(filename):
+    with open(filename, 'r') as csvfile:
+        datareader = csv.reader(csvfile, delimiter=',')
+        headers = next(datareader)
+        metadata = []
+        traindata = []
+        for name in headers:
+            metadata.append(name)
+        for row in datareader:
+            traindata.append(row)
+        print(metadata)
+        print(traindata)       
+
+    return (metadata, traindata)
+
+class Node:
+    def __init__(self, attribute):
+        self.attribute = attribute
+        self.children = []
+        self.answer = ""
+        
+    def __str__(self):
+        return self.attribute
+
+def subtables(data, col, delete):
+    dict = {}
+    items = np.unique(data[:, col])
+    count = np.zeros((items.shape[0], 1), dtype=np.int32)    
+    
+    for x in range(items.shape[0]):
+        for y in range(data.shape[0]):
+            if data[y, col] == items[x]:
+                count[x] += 1
+                
+    for x in range(items.shape[0]):
+        dict[items[x]] = np.empty((int(count[x]), data.shape[1]), dtype="|S32")
+        pos = 0
+        for y in range(data.shape[0]):
+            if data[y, col] == items[x]:
+                dict[items[x]][pos] = data[y]
+                pos += 1       
+        if delete:
+            dict[items[x]] = np.delete(dict[items[x]], col, 1)
+    #print(dict)   
+    return items, dict
+
+def entropy(S):
+    items = np.unique(S)
+
+    if items.size == 1:
+        return 0
+    
+    counts = np.zeros((items.shape[0], 1))
+    sums = 0
+    
+    for x in range(items.shape[0]):
+        counts[x] = sum(S == items[x]) / (S.size * 1.0)
+
+    for count in counts:
+        sums += -1 * count * math.log(count, 2)
+    print(sums)
+    return sums
+
+def gain_ratio(data, col):
+    items, dict = subtables(data, col, delete=False) 
+                
+    total_size = data.shape[0]    #Total number of rows in dataset
+    entropies = np.zeros((items.shape[0], 1)) # Stores weighted entropies
+    #intrinsic = np.zeros((items.shape[0], 1))# Stores split information components
+    
+    for x in range(items.shape[0]):
+        ratio = dict[items[x]].shape[0]/(total_size * 1.0)#Proportion of data with this attribute value (|Sᵥ|/|S|)
+        entropies[x] = ratio * entropy(dict[items[x]][:, -1])
+       # intrinsic[x] = ratio * math.log(ratio, 2)
+        
+    total_entropy = entropy(data[:, -1])
+   # iv = -1 * sum(intrinsic)
+    
+    for x in range(entropies.shape[0]):
+        total_entropy -= entropies[x]
+        
+    return total_entropy 
+
+def create_node(data, metadata):
+    if (np.unique(data[:, -1])).shape[0] == 1:
+        node = Node("")
+        node.answer = np.unique(data[:, -1])[0]
+        return node
+        
+    gains = np.zeros((data.shape[1] - 1, 1))
+    
+    for col in range(data.shape[1] - 1):
+        gains[col] = gain_ratio(data, col)
+        
+    split = np.argmax(gains)#returns the index of the column with the highest gain ratio.
+    
+    node = Node(metadata[split]) #Creates a Node object representing the best splitting feature.   
+    metadata = np.delete(metadata, split, 0)  #Removes the selected feature name from metadata.  
+    
+    items, dict = subtables(data, split, delete=True)
+    
+    for x in range(items.shape[0]):
+        child = create_node(dict[items[x]], metadata)
+        node.children.append((items[x], child))
+    
+    return node
+
+def empty(size):
+    s = ""
+    for x in range(size):
+        s += "   "
+    return s
+
+def print_tree(node, level):
+    if node.answer != "":
+        print(empty(level), node.answer)
+        return
+    print(empty(level), node.attribute)
+    for value, n in node.children:
+        print(empty(level + 1), value)
+        print_tree(n, level + 2)
+
+metadata, traindata = read_data("playtennis.csv")
+data = np.array(traindata)
+node = create_node(data, metadata)
+print_tree(node, 0)
+                 
+        print(" For Training Example No :{0} the hypothesis is S{0} ".format(i+1),S)
+        print(" For Training Example No :{0} the hypothesis is G{0}".format(i+1),temp)
