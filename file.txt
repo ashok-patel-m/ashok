@@ -1,4 +1,8 @@
+ heokokok
 
+
+
+  
 import csv
 num_attributes = 6
 a = []
